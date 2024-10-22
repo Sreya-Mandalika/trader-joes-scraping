@@ -1,0 +1,68 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import pandas as pd
+import time
+
+# Initialize the WebDriver
+driver = webdriver.Chrome()
+
+# Initialize lists to store product names and prices
+all_products = []
+all_prices = []
+
+# Loop through the first 3 pages
+for page in range(1, 3):  # Change 4 to 71 for all pages
+    print(f"Opening page {page}...")
+    
+    # Construct the URL for the current page
+    url = f"https://www.traderjoes.com/home/products/category/food-8?filters=%7B%22page%22%3A{page}%7D"
+    driver.get(url)
+
+    # Wait for product elements to load
+    try:
+        print("Waiting for product elements to load...")
+        WebDriverWait(driver, 20).until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'ProductCard_card__title__text__uiWLe')))
+        print("Product elements loaded.")
+    except Exception as e:
+        print("Error loading page:", e)
+        driver.quit()
+        exit()
+
+    # Optionally scroll down to load more products
+    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    time.sleep(2)  # Add a short delay to allow for additional loading
+
+    # Find elements containing product names and prices
+    product_elements = driver.find_elements(By.CLASS_NAME, 'ProductCard_card__title__text__uiWLe')
+    price_elements = driver.find_elements(By.CLASS_NAME, 'ProductPrice_productPrice__1Rq1r')
+
+    print(f"Found {len(product_elements)} products and {len(price_elements)} prices.")
+
+    # Loop through product elements and extract text
+    for product in product_elements:
+        all_products.append(product.text if product.text else "Unknown")
+
+    # Loop through price elements and extract text
+    for price in price_elements:
+        all_prices.append(price.text if price.text else "Unknown")
+
+# Ensure both lists are the same length
+max_length = max(len(all_products), len(all_prices))
+all_products += ["Unknown"] * (max_length - len(all_products))
+all_prices += ["Unknown"] * (max_length - len(all_prices))
+
+# Create DataFrame
+products_df = pd.DataFrame({
+    'Product': all_products,
+    'Price': all_prices
+})
+
+# Save to CSV
+products_df.to_csv('trader_joes_products.csv', index=False)
+
+print("Data saved to trader_joes_products.csv.")
+
+# Close the WebDriver
+driver.quit()

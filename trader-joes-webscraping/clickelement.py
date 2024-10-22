@@ -19,20 +19,19 @@ driver.maximize_window()
 # Navigate to the target website
 driver.get("https://www.traderjoes.com/home/products/category/food-8")
 
+text = "Organic Turkey Bone Broth"
+
 try:
     # Wait for the element to be clickable
     element = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.LINK_TEXT, "Organic Turkey Bone Broth"))
+        EC.presence_of_element_located((By.LINK_TEXT, text))
     )
     
     # Scroll the element into view
     driver.execute_script("arguments[0].scrollIntoView(true);", element)
-    
-    # Use JavaScript to click the element
     driver.execute_script("arguments[0].click();", element)
-    
-    # Verify that the page has navigated (you can print the URL to verify)
-    print("Current URL after clicking:", driver.current_url)
+    product_url = driver.current_url
+    print("Current URL after clicking:", product_url)
 
 except Exception as e:
     # If there's any issue, print the error
