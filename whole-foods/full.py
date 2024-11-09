@@ -19,7 +19,7 @@ all_amounts = []
 product_links = []
 
 # Open the Whole Foods product page URL
-driver.get("https://www.wholefoodsmarket.com/products/seafood")
+driver.get("https://www.wholefoodsmarket.com/products/snacks-chips-salsas-dips")
 
 # Wait for the popup and close it if present
 try:
@@ -190,9 +190,9 @@ products_df['Price'] = products_df['Price'].str.extract(r'(\$\d+\.\d{2})')
 # Remove any "Ingredients:" or similar variants at the beginning of the ingredients text
 products_df['Ingredients'] = products_df['Ingredients'].str.replace(r'(?i)^ingredients[:\s]*', '', regex=True)
 
-products_df.to_csv('whole_foods_pantry_seafood.csv', index=False)
+products_df.to_csv('whole_foods_snacks.csv', index=False)
 
-print("Data saved to whole_foods_seafood.csv.")
+print("Data saved to whole_foods_snacks.csv.")
 
 # Close the WebDriver
 driver.quit()
