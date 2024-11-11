@@ -25,10 +25,10 @@ def get_elements(driver, class_name, expected_count):
         elements = driver.find_elements(By.CLASS_NAME, class_name)
     return elements
 
-for page in range(1, 69):
+for page in range(1, 11):
     print(f"Opening page {page}...")
 
-    url = f"https://www.traderjoes.com/home/products/category/food-8?filters=%7B%22page%22%3A{page}%7D"
+    url = f"https://www.traderjoes.com/home/products/category/beverages-182"
     driver.get(url)
 
     # wait for product elements to load
